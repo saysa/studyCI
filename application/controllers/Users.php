@@ -159,4 +159,27 @@ class Users extends CI_Controller {
 			"errors" => $errors
 		));
 	}
+	
+	public function logout()
+	{
+		// load session library
+		$this->load->library("session");
+		
+		// remove user id
+		$this->session->unset_userdata("user");
+		
+		// redirect to login
+		self::redirect("/login");
+	}
+	
+	public function profile()
+	{
+		// check for user session
+		$this->_isSecure();
+		
+		// load view
+		$this->load->view("users/profile", array(
+			"user" => $this->user
+		));
+	}
 }
