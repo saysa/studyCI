@@ -99,4 +99,64 @@ class Users extends CI_Controller {
 			"success" => $success
 		));
 	}
+	
+	public function login()
+	{
+		$errors = null;
+		
+		// load validation library
+		$this->load->library("form_validation");
+		
+		// if form was posted
+		if ($this->input->post("login"))
+		{
+			// initialize validation rules
+			$this->form_validation->set_rules(array(
+				array(
+					"field" => "email",
+					"label" => "Email",
+					"rules" => "required|max_length[100]"
+				),
+				array(
+					"field" => "password",
+					"label" => "Password",
+					"rules" => "required|min_length[8]|max_length[32]"
+				)
+			));
+			
+			// load user model
+			$this->load->model("user");
+			
+			// create new user + save
+			$user = User::first(array(
+				"email" => $this-> input-> post("email"),
+				"password" => $this-> input-> post("password"),
+				"live" => 1,
+				"deleted" => 0
+			));
+			
+			// if form data passes validation...
+			if ($user && $this->form_validation->run())
+			{
+				// load session library
+				$this->load->library("session");
+				
+				// save user id to session
+				$this->session->set_userdata("user", $user->id);
+				
+				// redirect to profile page
+				self::redirect("/profile");
+			}
+			else
+			{
+				// indicate errors
+				$errors = "Email address and/or password are incorrect";
+			}
+		}
+			
+		// load view
+		$this->load->view("users/login", array(
+			"errors" => $errors
+		));
+	}
 }
