@@ -37,6 +37,8 @@ class User extends CI_Model {
 		
 		// load row
 		$this->load();
+		
+		$this->load->database();
 	}
 	
 	public function load()
@@ -84,7 +86,7 @@ class User extends CI_Model {
 		
 		// insert
 		$data["created"] = date("Y-m-d H:i:s");
-		$this->id = $this->db-> insert("user", $data);
+		$this->id = $this->db->insert("user", $data);
 		
 		// return insert id
 		return $this->id;
