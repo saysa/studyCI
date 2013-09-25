@@ -41,6 +41,22 @@
 $route['default_controller'] = "welcome";
 $route['404_override'] = '';
 
+// custom routes
+$route['register'] 				= 'users/register';
+$route['login']    				= 'users/login';
+$route['logout']   				= 'users/logout';
+$route['search']   				= 'users/search';
+$route['profile']  				= 'users/profile';
+$route['settings'] 				= 'users/settings';
+$route['friend/(:num)'] 		= 'users/friend/$1';
+$route['unfriend/(:num)'] 		= 'users/unfriend/$1';
+$route['users/edit/(:num)'] 	= 'users/edit/$1';
+$route['users/delete/(:num)'] 	= 'users/delete/$1';
+$route['users/undelete/(:num)'] = 'users/undelete/$1';
+$route['fonts/(:any)'] 			= 'files/fonts/$1';
+$route['thumbnails/(:num)'] 	= 'files/thumbnails/$1';
+$route['files/delete/(:num)'] 	= 'files/delete/$1';
+$route['files/undelete/(:num)'] = 'files/undelete/$1';
 
 /* End of file routes.php */
 /* Location: ./application/config/routes.php */
