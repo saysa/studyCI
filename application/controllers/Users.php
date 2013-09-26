@@ -40,6 +40,44 @@ class Users extends CI_Controller {
 		}
 	}
 	
+	public function _upload($name, $user)
+	{
+		// load file upload helper
+		$this->load->library("upload");
+		
+		// get extension
+		$time = time();
+		$path = dirname(BASEPATH)."/uploads/";
+		$filename = "{$user}-{$time}";
+		
+		// do upload
+		$this->upload->initialize(array(
+			"upload_path" => $path,
+			"file_name" => $filename,
+			"allowed_types" => "gif|jpg|png"
+		));
+		
+		if ($this->upload->do_upload($name))
+		{
+			// get uploaded file data
+			$data = $this->upload->data();
+			
+			// load file model
+			$this->load->model("file");
+			
+			$file = new File(array(
+				"name" => $data["file_name"],
+				"mime" => $data["file_type"],
+				"size" => $data["file_size"],
+				"width" => $data["image_width"],
+				"height" => $data["image_height"],
+				"user" => $user
+			));
+			
+			$file->save();
+		}
+	}
+	
 	public function register()
 	{
 		$success = false;
@@ -88,6 +126,9 @@ class Users extends CI_Controller {
 					"password" => $this-> input-> post("password")
 				));
 				$user-> save();
+				
+				// upload file
+				$this->_upload("photo", $user->id);
 				
 				// indicate success in view
 				$success = true;

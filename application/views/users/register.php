@@ -34,6 +34,12 @@
 				</label>
 			</li>
 			<li>
+				<label>
+					Photo:
+					<input type="file" name="photo" />
+				</label>
+			</li>
+			<li>
 				<input type="submit" name="save" value="register" />
 			</li>
 		</ol>
