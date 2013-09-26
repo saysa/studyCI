@@ -241,4 +241,60 @@ class Users extends CI_Controller {
 			"user" => $this->user
 		));
 	}
+	
+	public function search()
+	{
+		// get posted data
+		$query 	   = $this->input->post("query");
+		$order 	   = $this->input->post("order");
+		$direction = $this->input->post("direction");
+		$page 	   = $this->input->post("page");
+		$limit 	   = $this->input->post("limit");
+		
+		// default null values
+		$order 	   = $order ? $order : "modified";
+		$direction = $direction ? $direction : "desc";
+		$limit 	   = $limit ? $limit : 10;
+		$page 	   = $page ? $page : 1;
+		$count 	   = 0;
+		$users 	   = null;
+		
+		if ($this->input->post("search"))
+		{
+			$where = array(
+				"first"   => $query,
+				"live" 	  => 1,
+				"deleted" => 0
+			);
+			
+			$fields = array(
+				"id", "first", "last"
+			);
+			
+			// load user model
+			$this->load->model("user");
+			
+			// get count + results
+			$count = User::count($where);
+			$users = User::all(
+				$where,
+				$fields,
+				$order,
+				$direction,
+				$limit,
+				$page
+			);
+		}
+		
+		// load view
+		$this->load->view("users/search", array(
+			"query" 	=> $query,
+			"order" 	=> $order,
+			"direction" => $direction,
+			"page" 		=> $page,
+			"limit" 	=> $limit,
+			"count" 	=> $count,
+			"users" 	=> $users
+		));
+	}
 }
