@@ -182,4 +182,63 @@ class Users extends CI_Controller {
 			"user" => $this->user
 		));
 	}
+	
+	public function settings()
+	{
+		$success = false;
+		
+		// check for user session
+		$this->_isSecure();
+		
+		// load validation library
+		$this->load->library("form_validation");
+		
+		// if form was posted
+		if ($this-> input-> post("save"))
+		{
+			// initialize validation rules
+			$this->form_validation->set_rules(array(
+				array(
+					"field" => "first",
+					"label" => "First",
+					"rules" => "required|alpha|min_length[3]|max_length[32]"
+				),
+				array(
+					"field" => "last",
+					"label" => "Last",
+					"rules" => "required|alpha|min_length[3]|max_length[32]"
+				),
+				array(
+					"field" => "email",
+					"label" => "Email",
+					"rules" => "required|max_length[100]"
+				),
+				array(
+					"field" => "password",
+					"label" => "Password",
+					"rules" => "required|min_length[8]|max_length[32]"
+				)
+			));
+			
+			// if form data passes validation...
+			if ($this->form_validation->run())
+			{
+				// update user
+				$this->user->first 	  = $this->input->post("first");
+				$this->user->last 	  = $this->input->post("last");
+				$this->user->email 	  = $this->input->post("email");
+				$this->user->password = $this->input->post("password");
+				$this->user->save();
+				
+				// indicate success in view
+				$success = true;
+			}
+		}
+		
+		// load view
+		$this->load->view("users/settings", array(
+			"success" => $success,
+			"user" => $this->user
+		));
+	}
 }
