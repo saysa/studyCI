@@ -218,9 +218,24 @@ class Users extends CI_Controller {
 		// check for user session
 		$this->_isSecure();
 		
+		// get profile photo
+		$this->load->model("file");
+		
+		$file = File::first(array(
+			"user" => $this->user->id
+		));
+		
+		// get thumbnail
+		$this->load->library("thumbnail", array(
+			"file" => $file
+		));
+		
+		$filename = $this->thumbnail->getFilename();
+		
 		// load view
 		$this->load->view("users/profile", array(
-			"user" => $this->user
+			"user" => $this->user,
+			"filename" => $filename
 		));
 	}
 	
